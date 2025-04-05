@@ -5,7 +5,14 @@ import java.util.Arrays;
  */
 public class ArrayStorage {
     Resume[] storage = new Resume[10000];
-    int size = size();
+    private int size = 0;
+
+    {
+        for (Resume resume : storage) {
+            if (resume == null) break;
+            size++;
+        }
+    }
 
     void clear() {
         Arrays.fill(storage, 0, size, null);
@@ -16,26 +23,16 @@ public class ArrayStorage {
     }
 
     Resume get(String uuid) {
-        for (int i = 0; i < size; i++) {
-            if (storage[i].uuid.equals(uuid))
-                return storage[i];
-        }
-        return null;
+        int index = indexOf(uuid);
+        return (index == -1) ? null : storage[index];
     }
 
     void delete(String uuid) {
-        int offset = 0;
-        boolean modified = false;
-        for (int i = 0; i < size; i++) {
-            if (storage[i].uuid.equals(uuid)) {
-                offset = (i < size - 1) ? 1 : 0;
-                modified = true;
-                size--;
-            }
-            storage[i] = storage[i + offset];
-        }
-        if (modified)
+        int targetIndex = indexOf(uuid);
+        if (targetIndex != -1) {
+            storage[targetIndex] = storage[--size];
             storage[size] = null;
+        }
     }
 
     /**
@@ -48,11 +45,17 @@ public class ArrayStorage {
     }
 
     int size() {
-        int resumeCount = 0;
-        for (Resume resume : storage) {
-            if (resume == null) break;
-            resumeCount++;
-        }
-        return resumeCount;
+        return size;
     }
+
+    private int indexOf(String uuid) {
+        int index = -1;
+        for (int i = 0; i < size; i++) {
+            if (storage[i].uuid.equals(uuid)) {
+                index = i;
+            }
+        }
+        return index;
+    }
+
 }
