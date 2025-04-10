@@ -1,5 +1,8 @@
 package ru.javawebinar.basejava.storage;
 
+import ru.javawebinar.basejava.exception.ExistStorageException;
+import ru.javawebinar.basejava.exception.NotExistStorageException;
+import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.Arrays;
@@ -18,7 +21,7 @@ public abstract class AbstractArrayStorage implements Storage {
     public final void update(Resume r) {
         int index = findIndex(r.getUuid());
         if (index == -1) {
-            System.out.println("Resume not found! uuid: " + r.getUuid());
+            throw new NotExistStorageException(r.getUuid());
         } else {
             storage[index] = r;
         }
@@ -26,13 +29,12 @@ public abstract class AbstractArrayStorage implements Storage {
 
     public final void save(Resume r) {
         if (size == STORAGE_LIMIT) {
-            System.out.println("Storage overflow");
-            return;
+            throw new StorageException("Storage overflow", r.getUuid());
         }
 
         int index = findIndex(r.getUuid());
         if (index >= 0) {
-            System.out.println("Resume already exists! uuid: " + r.getUuid());
+            throw new ExistStorageException(r.getUuid());
         } else {
             insertElement(r, -(index + 1));
             size++;
@@ -42,8 +44,7 @@ public abstract class AbstractArrayStorage implements Storage {
     public final Resume get(String uuid) {
         int index = findIndex(uuid);
         if (index == -1) {
-            System.out.println("Resume not found! uuid: " + uuid);
-            return null;
+            throw new NotExistStorageException(uuid);
         }
         return storage[index];
     }
@@ -51,7 +52,7 @@ public abstract class AbstractArrayStorage implements Storage {
     public final void delete(String uuid) {
         int index = findIndex(uuid);
         if (index == -1) {
-            System.out.println("Resume not found! uuid: " + uuid);
+            throw new NotExistStorageException(uuid);
         } else {
             removeElement(index);
             storage[size - 1] = null;
