@@ -11,12 +11,6 @@ import ru.javawebinar.basejava.model.Resume;
 import static ru.javawebinar.basejava.storage.AbstractArrayStorage.STORAGE_LIMIT;
 
 public abstract class AbstractArrayStorageTest {
-    private final Storage storage;
-
-    public AbstractArrayStorageTest(Storage storage) {
-        this.storage = storage;
-    }
-
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
     private static final String UUID_3 = "uuid3";
@@ -28,6 +22,12 @@ public abstract class AbstractArrayStorageTest {
     private static final Resume RESUME3 = new Resume(UUID_3);
     private static final Resume RESUME4 = new Resume(UUID_4);
     private static final Resume RESUME_DUMMY = new Resume(DUMMY);
+
+    private final Storage storage;
+
+    public AbstractArrayStorageTest(Storage storage) {
+        this.storage = storage;
+    }
 
     @Before
     public void setUp() {
@@ -46,8 +46,9 @@ public abstract class AbstractArrayStorageTest {
 
     @Test
     public void update() {
-        storage.update(RESUME3);
-        Assert.assertSame(RESUME3, storage.get(RESUME3.getUuid()));
+        Resume resume = new Resume(UUID_3);
+        storage.update(resume);
+        Assert.assertSame(resume, storage.get(resume.getUuid()));
     }
 
     @Test(expected = NotExistStorageException.class)
