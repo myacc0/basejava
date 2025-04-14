@@ -1,13 +1,11 @@
 package ru.javawebinar.basejava.storage;
 
-import ru.javawebinar.basejava.exception.ExistStorageException;
-import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.Arrays;
 
-public abstract class AbstractArrayStorage implements Storage {
+public abstract class AbstractArrayStorage extends AbstractStorage implements Storage {
     protected static final int STORAGE_LIMIT = 10_000;
 
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
@@ -16,48 +14,6 @@ public abstract class AbstractArrayStorage implements Storage {
     public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
-    }
-
-    public final void update(Resume r) {
-        int index = findIndex(r.getUuid());
-        if (index == -1) {
-            throw new NotExistStorageException(r.getUuid());
-        } else {
-            storage[index] = r;
-        }
-    }
-
-    public final void save(Resume r) {
-        if (size == STORAGE_LIMIT) {
-            throw new StorageException("Storage overflow", r.getUuid());
-        }
-
-        int index = findIndex(r.getUuid());
-        if (index >= 0) {
-            throw new ExistStorageException(r.getUuid());
-        } else {
-            insertElement(r, -(index + 1));
-            size++;
-        }
-    }
-
-    public final Resume get(String uuid) {
-        int index = findIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        }
-        return storage[index];
-    }
-
-    public final void delete(String uuid) {
-        int index = findIndex(uuid);
-        if (index == -1) {
-            throw new NotExistStorageException(uuid);
-        } else {
-            removeElement(index);
-            storage[size - 1] = null;
-            size--;
-        }
     }
 
     /**
@@ -69,6 +25,32 @@ public abstract class AbstractArrayStorage implements Storage {
 
     public int size() {
         return size;
+    }
+
+    @Override
+    protected final void processUpdate(int index, Resume r) {
+        storage[index] = r;
+    }
+
+    @Override
+    protected final void processSave(int index, Resume r) {
+        if (size == STORAGE_LIMIT) {
+            throw new StorageException("Storage overflow", r.getUuid());
+        }
+        insertElement(r, -(index + 1));
+        size++;
+    }
+
+    @Override
+    protected final Resume processGet(int index) {
+        return storage[index];
+    }
+
+    @Override
+    protected final void processDelete(int index) {
+        removeElement(index);
+        storage[size - 1] = null;
+        size--;
     }
 
     protected abstract int findIndex(String uuid);
