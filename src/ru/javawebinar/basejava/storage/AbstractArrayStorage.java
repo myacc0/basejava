@@ -28,32 +28,35 @@ public abstract class AbstractArrayStorage extends AbstractStorage implements St
     }
 
     @Override
-    protected final void processUpdate(int index, Resume r) {
-        storage[index] = r;
+    protected final void processUpdate(Object searchKey, Resume r) {
+        storage[(int) searchKey] = r;
     }
 
     @Override
-    protected final void processSave(int index, Resume r) {
+    protected final void processSave(Object searchKey, Resume r) {
         if (size == STORAGE_LIMIT) {
             throw new StorageException("Storage overflow", r.getUuid());
         }
-        insertElement(r, -(index + 1));
+        insertElement(r, -((int) searchKey + 1));
         size++;
     }
 
     @Override
-    protected final Resume processGet(int index) {
-        return storage[index];
+    protected final Resume processGet(Object searchKey) {
+        return storage[(int) searchKey];
     }
 
     @Override
-    protected final void processDelete(int index) {
-        removeElement(index);
+    protected final void processDelete(Object searchKey) {
+        removeElement((int) searchKey);
         storage[size - 1] = null;
         size--;
     }
 
-    protected abstract int findIndex(String uuid);
+    @Override
+    protected boolean isExist(Object searchKey) {
+        return (int) searchKey >= 0;
+    }
 
     protected abstract void insertElement(Resume r, int index);
 

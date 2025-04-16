@@ -7,47 +7,46 @@ import ru.javawebinar.basejava.model.Resume;
 public abstract class AbstractStorage implements Storage {
 
     public final void update(Resume r) {
-        int index = findIndex(r.getUuid());
-        if (index < 0) {
-            throw new NotExistStorageException(r.getUuid());
-        } else {
-            processUpdate(index, r);
-        }
+        processUpdate(getExistingSearchKey(r.getUuid()), r);
     }
 
     public final void save(Resume r) {
-        int index = findIndex(r.getUuid());
-        if (index >= 0) {
-            throw new ExistStorageException(r.getUuid());
-        } else {
-            processSave(index, r);
-        }
+        processSave(getNotExistingSearchKey(r.getUuid()), r);
     }
 
     public final Resume get(String uuid) {
-        int index = findIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        }
-        return processGet(index);
+        return processGet(getExistingSearchKey(uuid));
     }
 
     public final void delete(String uuid) {
-        int index = findIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        } else {
-            processDelete(index);
-        }
+        processDelete(getExistingSearchKey(uuid));
     }
 
-    protected abstract void processUpdate(int index, Resume r);
+    private Object getExistingSearchKey(String uuid) {
+        Object searchKey = findIndex(uuid);
+        if (!isExist(searchKey)) {
+            throw new NotExistStorageException(uuid);
+        }
+        return searchKey;
+    }
 
-    protected abstract void processSave(int index, Resume r);
+    private Object getNotExistingSearchKey(String uuid) {
+        Object searchKey = findIndex(uuid);
+        if (isExist(searchKey)) {
+            throw new ExistStorageException(uuid);
+        }
+        return searchKey;
+    }
 
-    protected abstract Resume processGet(int index);
+    protected abstract void processUpdate(Object searchKey, Resume r);
 
-    protected abstract void processDelete(int index);
+    protected abstract void processSave(Object searchKey, Resume r);
 
-    protected abstract int findIndex(String uuid);
+    protected abstract Resume processGet(Object searchKey);
+
+    protected abstract void processDelete(Object searchKey);
+
+    protected abstract Object findIndex(String uuid);
+
+    protected abstract boolean isExist(Object searchKey);
 }
