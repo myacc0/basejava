@@ -7,8 +7,9 @@ import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.stream.Stream;
+
+import static ru.javawebinar.basejava.storage.AbstractStorage.RESUME_COMPARATOR;
 
 public abstract class AbstractStorageTest {
     private static final String UUID_1 = "uuid1";
@@ -17,11 +18,11 @@ public abstract class AbstractStorageTest {
     private static final String UUID_4 = "uuid4";
     private static final String DUMMY = "dummy";
 
-    private static final Resume RESUME1 = new Resume(UUID_1);
-    private static final Resume RESUME2 = new Resume(UUID_2);
-    private static final Resume RESUME3 = new Resume(UUID_3);
-    private static final Resume RESUME4 = new Resume(UUID_4);
-    private static final Resume RESUME_DUMMY = new Resume(DUMMY);
+    private static final Resume RESUME1 = new Resume(UUID_1, "John Doe");
+    private static final Resume RESUME2 = new Resume(UUID_2, "Bob Martin");
+    private static final Resume RESUME3 = new Resume(UUID_3, "Alice Bob");
+    private static final Resume RESUME4 = new Resume(UUID_4, "Alex Doe");
+    private static final Resume RESUME_DUMMY = new Resume(DUMMY, DUMMY);
 
     protected final Storage storage;
 
@@ -41,12 +42,12 @@ public abstract class AbstractStorageTest {
     public void clear() {
         storage.clear();
         assertSize(0);
-        Assert.assertArrayEquals(storage.getAll(), new Resume[]{});
+        Assert.assertArrayEquals(storage.getAllSorted().toArray(), new Resume[]{});
     }
 
     @Test
     public void update() {
-        Resume resume = new Resume(UUID_3);
+        Resume resume = new Resume(UUID_3, "John Doe");
         storage.update(resume);
         Assert.assertSame(resume, storage.get(resume.getUuid()));
     }
@@ -92,10 +93,9 @@ public abstract class AbstractStorageTest {
     }
 
     @Test
-    public void getAll() {
-        Resume[] expected = new Resume[] {RESUME1, RESUME2, RESUME3};
-        Resume[] actual = storage.getAll();
-        Arrays.sort(actual, Comparator.comparing(Resume::getUuid));
+    public void getAllSorted() {
+        Resume[] expected = Stream.of(RESUME1, RESUME2, RESUME3).sorted(RESUME_COMPARATOR).toArray(Resume[]::new);
+        Resume[] actual = storage.getAllSorted().toArray(Resume[]::new);
         Assert.assertArrayEquals(expected, actual);
     }
 

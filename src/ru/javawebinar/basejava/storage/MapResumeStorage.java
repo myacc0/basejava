@@ -2,11 +2,12 @@ package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.model.Resume;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class ListStorage extends AbstractStorage {
-    private final List<Resume> storage = new ArrayList<>();
+public class MapResumeStorage extends AbstractStorage {
+    private final Map<String, Resume> storage = new HashMap<>();
 
     @Override
     public void clear() {
@@ -15,8 +16,10 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     public List<Resume> getAllSorted() {
-        storage.sort(RESUME_COMPARATOR);
-        return storage;
+        return storage.values()
+                .stream()
+                .sorted(RESUME_COMPARATOR)
+                .toList();
     }
 
     @Override
@@ -26,36 +29,32 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected void processUpdate(Object searchKey, Resume r) {
-        storage.set((int) searchKey, r);
+        storage.put(r.getUuid(), r);
     }
 
     @Override
     protected void processSave(Object searchKey, Resume r) {
-        storage.add(r);
+        storage.put(r.getUuid(), r);
     }
 
     @Override
     protected Resume processGet(Object searchKey) {
-        return storage.get((int) searchKey);
+        return (Resume) searchKey;
     }
 
     @Override
     protected void processDelete(Object searchKey) {
-        storage.remove((int) searchKey);
+        storage.remove(((Resume) searchKey).getUuid());
     }
 
     @Override
-    protected Integer getSearchKey(String uuid) {
-        for (int i = 0; i < storage.size(); i++) {
-            if (storage.get(i).getUuid().equals(uuid)) {
-                return i;
-            }
-        }
-        return -1;
+    protected Resume getSearchKey(String uuid) {
+        return storage.get(uuid);
     }
 
     @Override
     protected boolean isExist(Object searchKey) {
-        return (int) searchKey >= 0;
+        return searchKey != null;
     }
+
 }

@@ -4,6 +4,8 @@ import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
 
 public abstract class AbstractArrayStorage extends AbstractStorage implements Storage {
     protected static final int STORAGE_LIMIT = 10_000;
@@ -19,8 +21,10 @@ public abstract class AbstractArrayStorage extends AbstractStorage implements St
     /**
      * @return array, contains only Resumes in storage (without null)
      */
-    public Resume[] getAll() {
-        return Arrays.copyOfRange(storage, 0, size);
+    public List<Resume> getAllSorted() {
+        return Stream.of(Arrays.copyOfRange(storage, 0, size))
+                .sorted(RESUME_COMPARATOR)
+                .toList();
     }
 
     public int size() {

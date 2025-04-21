@@ -23,7 +23,7 @@ public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
                 Assert.fail("Storage overflow before expected!");
             }
         }
-        storage.save(new Resume());
+        storage.save(new Resume("dummy"));
     }
 
 }
