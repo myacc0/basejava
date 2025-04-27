@@ -6,7 +6,7 @@ import ru.javawebinar.basejava.model.Resume;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class AbstractArrayStorage extends AbstractStorage implements Storage {
+public abstract class AbstractArrayStorage extends AbstractStorage<Integer> implements Storage {
     protected static final int STORAGE_LIMIT = 10_000;
 
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
@@ -29,34 +29,34 @@ public abstract class AbstractArrayStorage extends AbstractStorage implements St
     }
 
     @Override
-    protected final void processUpdate(Object searchKey, Resume r) {
-        storage[(int) searchKey] = r;
+    protected final void processUpdate(Integer searchKey, Resume r) {
+        storage[searchKey] = r;
     }
 
     @Override
-    protected final void processSave(Object searchKey, Resume r) {
+    protected final void processSave(Integer searchKey, Resume r) {
         if (size == STORAGE_LIMIT) {
             throw new StorageException("Storage overflow", r.getUuid());
         }
-        insertElement(r, -((int) searchKey + 1));
+        insertElement(r, -(searchKey + 1));
         size++;
     }
 
     @Override
-    protected final Resume processGet(Object searchKey) {
-        return storage[(int) searchKey];
+    protected final Resume processGet(Integer searchKey) {
+        return storage[searchKey];
     }
 
     @Override
-    protected final void processDelete(Object searchKey) {
-        removeElement((int) searchKey);
+    protected final void processDelete(Integer searchKey) {
+        removeElement(searchKey);
         storage[size - 1] = null;
         size--;
     }
 
     @Override
-    protected boolean isExist(Object searchKey) {
-        return (int) searchKey >= 0;
+    protected boolean isExist(Integer searchKey) {
+        return searchKey >= 0;
     }
 
     protected abstract void insertElement(Resume r, int index);
