@@ -5,8 +5,6 @@ import ru.javawebinar.basejava.model.Resume;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public abstract class AbstractArrayStorage extends AbstractStorage implements Storage {
     protected static final int STORAGE_LIMIT = 10_000;
@@ -23,9 +21,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage implements St
      * @return array, contains only Resumes in storage (without null)
      */
     public List<Resume> getAll() {
-        return Stream.of(Arrays.copyOfRange(storage, 0, size))
-                .sorted(RESUME_COMPARATOR)
-                .collect(Collectors.toList());
+        return Arrays.asList(Arrays.copyOfRange(storage, 0, size));
     }
 
     public int size() {
