@@ -1,5 +1,6 @@
 package ru.javawebinar.basejava.model;
 
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -11,6 +12,8 @@ public class Resume {
     // Unique identifier
     private final String uuid;
     private final String fullName;
+    private Map<ContactType, String> contacts;
+    private Map<SectionType, Section> sections;
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -23,17 +26,33 @@ public class Resume {
         this.fullName = fullName;
     }
 
-    @Override
-    public String toString() {
-        return uuid + '(' + fullName + ')';
-    }
-
     public String getUuid() {
         return uuid;
     }
 
     public String getFullName() {
         return fullName;
+    }
+
+    public Map<ContactType, String> getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(Map<ContactType, String> contacts) {
+        this.contacts = contacts;
+    }
+
+    public Map<SectionType, Section> getSections() {
+        return sections;
+    }
+
+    public void setSections(Map<SectionType, Section> sections) {
+        this.sections = sections;
+    }
+
+    @Override
+    public String toString() {
+        return uuid + '(' + fullName + ')';
     }
 
     @Override
