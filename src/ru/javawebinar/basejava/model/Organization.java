@@ -1,6 +1,7 @@
 package ru.javawebinar.basejava.model;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Organization {
     private String name;
@@ -29,6 +30,21 @@ public class Organization {
 
     public void setPeriods(List<Period> periods) {
         this.periods = periods;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        Organization that = (Organization) object;
+        return Objects.equals(name, that.name)
+                && Objects.equals(website, that.website)
+                && Objects.equals(periods, that.periods);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, website, periods);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package ru.javawebinar.basejava.model;
 
 import java.util.List;
+import java.util.Objects;
 
 public class OrganizationSection extends Section {
     private List<Organization> content;
@@ -14,16 +15,22 @@ public class OrganizationSection extends Section {
     }
 
     @Override
-    public void print() {
-        for (Organization o : content) {
-            System.out.println(o.getName());
-            System.out.println("[" + o.getWebsite() + "]");
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        OrganizationSection that = (OrganizationSection) object;
+        return Objects.equals(content, that.content);
+    }
 
-            for (Period p : o.getPeriods()) {
-                System.out.printf("[%s - %s]%n", p.getStartDate(), p.getEndDate());
-                System.out.println(p.getDescription());
-            }
-            System.out.println();
-        }
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(content);
+    }
+
+    @Override
+    public String toString() {
+        return "OrganizationSection{" +
+                "content=" + content +
+                '}';
     }
 }

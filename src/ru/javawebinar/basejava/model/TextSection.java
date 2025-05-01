@@ -1,5 +1,7 @@
 package ru.javawebinar.basejava.model;
 
+import java.util.Objects;
+
 public class TextSection extends Section {
     private String content;
 
@@ -19,7 +21,20 @@ public class TextSection extends Section {
     }
 
     @Override
-    public void print() {
-        System.out.println(content);
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        TextSection that = (TextSection) object;
+        return Objects.equals(content, that.content);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(content);
+    }
+
+    @Override
+    public String toString() {
+        return content;
     }
 }

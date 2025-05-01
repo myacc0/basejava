@@ -4,6 +4,7 @@ import ru.javawebinar.basejava.model.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -210,16 +211,20 @@ public class ResumeTestData {
         System.out.println(" ------ \n");
 
         resume.getContacts().forEach((k, v) -> {
-            System.out.println(k + ": " + v);
+            System.out.println(k.getTitle() + ": " + v);
         });
         System.out.println("\n");
 
-        resume.getSections().forEach((k, v) -> {
-            System.out.println(k.getTitle());
-            System.out.println(" ------ ");
-            v.print();
-            System.out.println("\n");
-        });
+        resume.getSections()
+                .keySet()
+                .stream()
+                .sorted(Comparator.comparing(SectionType::ordinal))
+                .forEach(k -> {
+                    System.out.println(k.getTitle());
+                    System.out.println(" ------ ");
+                    System.out.println(resume.getSections().get(k));
+                    System.out.println("\n");
+                });
     }
 
 }

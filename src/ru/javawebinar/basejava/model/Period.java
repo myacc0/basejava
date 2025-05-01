@@ -1,6 +1,7 @@
 package ru.javawebinar.basejava.model;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Period {
     private LocalDate startDate;
@@ -29,6 +30,19 @@ public class Period {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        Period period = (Period) object;
+        return Objects.equals(startDate, period.startDate) && Objects.equals(endDate, period.endDate) && Objects.equals(description, period.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(startDate, endDate, description);
     }
 
     @Override
