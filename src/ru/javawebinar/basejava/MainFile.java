@@ -29,5 +29,28 @@ public class MainFile {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+
+        System.out.println("\n\n");
+        printDirectory(new File("."), 0);
+    }
+
+    private static void printDirectory(File fsItem, int depth) {
+        String tabChar = "\t".repeat(depth);
+        if (fsItem.isFile()) {
+            System.out.println(tabChar + "> " + fsItem.getName());
+        } else {
+            depth++;
+            System.out.println(tabChar + fsItem.getName() + ": ");
+            File[] list = fsItem.listFiles();
+            if (list != null) {
+                for (File file: list) {
+                    if (file.getName().equals(".git") || file.getName().equals("out")) {
+                        continue;
+                    }
+                    printDirectory(file, depth);
+                }
+            }
+        }
     }
 }

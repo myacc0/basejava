@@ -11,7 +11,12 @@ import java.util.List;
 public class ResumeTestData {
 
     public static void main(String[] args) {
-        Resume resume = new Resume("Григорий Кислин");
+        Resume resume = createResume("uuid1", "Григорий Кислин");
+        printResume(resume);
+    }
+
+    public static Resume createResume(String uuid, String fullName) {
+        Resume resume = new Resume(uuid, fullName);
         resume.setContacts(new HashMap<>());
         resume.setSections(new HashMap<>());
 
@@ -64,8 +69,7 @@ public class ResumeTestData {
         OrganizationSection education = new OrganizationSection();
         fillEducationSpecialities(education);
         resume.getSections().put(SectionType.EDUCATION, education);
-
-        printResume(resume);
+        return resume;
     }
 
     private static void fillJobExperiences(OrganizationSection organization) {

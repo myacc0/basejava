@@ -3,6 +3,7 @@ package ru.javawebinar.basejava.storage;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import ru.javawebinar.basejava.ResumeTestData;
 import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
@@ -18,11 +19,11 @@ public abstract class AbstractStorageTest {
     private static final String UUID_4 = "uuid4";
     private static final String DUMMY = "dummy";
 
-    private static final Resume RESUME1 = new Resume(UUID_1, "John Doe");
-    private static final Resume RESUME2 = new Resume(UUID_2, "Bob Martin");
-    private static final Resume RESUME3 = new Resume(UUID_3, "Alice Bob");
-    private static final Resume RESUME4 = new Resume(UUID_4, "Alex Doe");
-    private static final Resume RESUME_DUMMY = new Resume(DUMMY, DUMMY);
+    private static final Resume RESUME1 = ResumeTestData.createResume(UUID_1, "John Doe");
+    private static final Resume RESUME2 = ResumeTestData.createResume(UUID_2, "Bob Martin");
+    private static final Resume RESUME3 = ResumeTestData.createResume(UUID_3, "Alice Bob");
+    private static final Resume RESUME4 = ResumeTestData.createResume(UUID_4, "Alex Doe");
+    private static final Resume RESUME_DUMMY = ResumeTestData.createResume(DUMMY, DUMMY);
 
     protected final Storage storage;
 
@@ -47,7 +48,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void update() {
-        Resume resume = new Resume(UUID_3, "John Doe");
+        Resume resume = ResumeTestData.createResume(UUID_3, "John Doe");
         storage.update(resume);
         Assert.assertSame(resume, storage.get(resume.getUuid()));
     }
