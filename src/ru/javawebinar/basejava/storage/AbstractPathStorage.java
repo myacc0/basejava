@@ -9,8 +9,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class AbstractPathStorage extends AbstractStorage<Path> {
+public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     private final Path directory;
 
     public AbstractPathStorage(String dir) {
@@ -22,44 +24,64 @@ public class AbstractPathStorage extends AbstractStorage<Path> {
     }
 
     @Override
-    protected void processUpdate(Path searchKey, Resume r) {
-
+    protected void processUpdate(Path path, Resume r) {
+        try {
+            doWrite(r, path);
+        } catch (IOException e) {
+            throw new StorageException("IO error", path.getFileName().toString(), e);
+        }
     }
 
     @Override
-    protected void processSave(Path searchKey, Resume r) {
-
+    protected void processSave(Path path, Resume r) {
+        try {
+            doWrite(r, path);
+        } catch (IOException e) {
+            throw new StorageException("IO error", path.getFileName().toString(), e);
+        }
     }
 
     @Override
-    protected Resume processGet(Path searchKey) {
-        return null;
+    protected Resume processGet(Path path) {
+        try {
+            return doRead(path);
+        } catch (IOException e) {
+            throw new StorageException("IO error", path.getFileName().toString(), e);
+        }
     }
 
     @Override
-    protected void processDelete(Path searchKey) {
-
+    protected void processDelete(Path path) {
+        try {
+            Files.delete(path);
+        } catch (IOException e) {
+            throw new StorageException("Error file delete", path.getFileName().toString());
+        }
     }
 
     @Override
     protected Path getSearchKey(String uuid) {
-        return null;
+        return directory.resolve(uuid);
     }
 
     @Override
-    protected boolean isExist(Path searchKey) {
-        return false;
+    protected boolean isExist(Path path) {
+        return Files.exists(path);
     }
 
     @Override
     protected List<Resume> getAll() {
-        return List.of();
+        try (Stream<Path> items = Files.list(directory)) {
+            return items.map(this::processGet).collect(Collectors.toList());
+        } catch (IOException e) {
+            throw new StorageException("Error read directory", null);
+        }
     }
 
     @Override
     public void clear() {
-        try {
-            Files.list(directory).forEach(this::processDelete);
+        try(Stream<Path> items = Files.list(directory)) {
+            items.forEach(this::processDelete);
         } catch (IOException e) {
             throw new StorageException("Path delete error", null);
         }
@@ -67,6 +89,14 @@ public class AbstractPathStorage extends AbstractStorage<Path> {
 
     @Override
     public int size() {
-        return 0;
+        try(Stream<Path> items = Files.list(directory)) {
+            return Long.valueOf(items.count()).intValue();
+        } catch (IOException e) {
+            throw new StorageException("Path delete error", null);
+        }
     }
+
+    protected abstract void doWrite(Resume r, Path path) throws IOException;
+
+    protected abstract Resume doRead(Path path) throws IOException;
 }
