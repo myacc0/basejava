@@ -4,7 +4,7 @@ import jakarta.xml.bind.annotation.adapters.XmlAdapter;
 
 import java.time.LocalDate;
 
-public class LocalDateAdapter extends XmlAdapter<String, LocalDate> {
+public class XmlLocalDateAdapter extends XmlAdapter<String, LocalDate> {
 
     @Override
     public LocalDate unmarshal(String s) {

@@ -3,7 +3,7 @@ package ru.javawebinar.basejava.model;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import ru.javawebinar.basejava.util.LocalDateAdapter;
+import ru.javawebinar.basejava.util.XmlLocalDateAdapter;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -13,10 +13,10 @@ import java.util.Objects;
 public class Period implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    @XmlJavaTypeAdapter(LocalDateAdapter.class)
+    @XmlJavaTypeAdapter(XmlLocalDateAdapter.class)
     private LocalDate startDate;
 
-    @XmlJavaTypeAdapter(LocalDateAdapter.class)
+    @XmlJavaTypeAdapter(XmlLocalDateAdapter.class)
     private LocalDate endDate;
 
     private String description;
