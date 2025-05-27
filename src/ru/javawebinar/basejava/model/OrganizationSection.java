@@ -3,6 +3,7 @@ package ru.javawebinar.basejava.model;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,6 +12,10 @@ public class OrganizationSection extends Section {
     private static final long serialVersionUID = 1L;
 
     private List<Organization> content;
+
+    public OrganizationSection() {
+        this.content = new ArrayList<>();
+    }
 
     public List<Organization> getContent() {
         return content;

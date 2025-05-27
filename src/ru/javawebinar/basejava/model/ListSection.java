@@ -1,10 +1,15 @@
 package ru.javawebinar.basejava.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class ListSection extends Section {
     private static final long serialVersionUID = 1L;
+
+    public ListSection() {
+        this.content = new ArrayList<>();
+    }
 
     private List<String> content;
 

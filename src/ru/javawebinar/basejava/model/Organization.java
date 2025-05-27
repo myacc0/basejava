@@ -4,6 +4,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -14,6 +15,10 @@ public class Organization implements Serializable {
     private String name;
     private String website;
     private List<Period> periods;
+
+    public Organization() {
+        this.periods = new ArrayList<>();
+    }
 
     public String getName() {
         return name;
