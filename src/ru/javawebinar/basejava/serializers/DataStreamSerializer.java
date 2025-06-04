@@ -17,6 +17,7 @@ public class DataStreamSerializer implements ResumeSerializer {
             dos.writeUTF(r.getUuid());
             dos.writeUTF(r.getFullName());
 
+            /*
             writeCollection(dos, r.getContacts().entrySet(), (e) -> {
                 dos.writeUTF(e.getKey().name());
                 dos.writeUTF(e.getValue());
@@ -35,6 +36,7 @@ public class DataStreamSerializer implements ResumeSerializer {
             writeCollection(dos,
                     ((OrganizationSection) r.getSections().get(SectionType.EDUCATION)).getContent(),
                     o -> writeOrganization(dos, o));
+            */
         }
     }
 
@@ -45,6 +47,7 @@ public class DataStreamSerializer implements ResumeSerializer {
             String fullName = dis.readUTF();
             Resume r = new Resume(uuid, fullName);
 
+            /*
             Set<Map.Entry<ContactType, String>> contactsEntrySet = new HashSet<>();
             readCollection(dis, contactsEntrySet, d -> Map.entry(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
             contactsEntrySet.forEach(entry -> r.addContact(entry.getKey(), entry.getValue()));
@@ -63,6 +66,7 @@ public class DataStreamSerializer implements ResumeSerializer {
 
             r.addSection(SectionType.EDUCATION, new OrganizationSection());
             readCollection(dis, ((OrganizationSection) r.getSections().get(SectionType.EDUCATION)).getContent(), this::readOrganization);
+             */
             return r;
         }
     }
