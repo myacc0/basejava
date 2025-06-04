@@ -98,7 +98,7 @@ public class FileStorage extends AbstractStorage<File> {
         if (files != null) {
             return files;
         }
-        throw new StorageException("Error read directory", null);
+        throw new StorageException("Error read directory");
     }
 
 }
