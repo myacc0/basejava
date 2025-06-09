@@ -9,7 +9,6 @@ import ru.javawebinar.basejava.util.SqlHelper;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,7 +81,7 @@ public class SqlStorage implements Storage {
             while (rs.next()) {
                 resumes.add(
                         new Resume(
-                                rs.getString("uuid").trim(),
+                                rs.getString("uuid"),
                                 rs.getString("full_name")));
             }
             return resumes;
@@ -99,13 +98,5 @@ public class SqlStorage implements Storage {
             }
             return rs.getInt("total");
         });
-    }
-
-    public interface QueryExecutor {
-        void execute(PreparedStatement ps) throws SQLException;
-    }
-
-    public interface QuerySelectExecutor<T> {
-        T execute(PreparedStatement ps) throws SQLException;
     }
 }

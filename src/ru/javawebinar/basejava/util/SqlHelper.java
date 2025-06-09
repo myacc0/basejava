@@ -2,7 +2,6 @@ package ru.javawebinar.basejava.util;
 
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.sql.ConnectionFactory;
-import ru.javawebinar.basejava.storage.SqlStorage;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,7 +12,7 @@ public class SqlHelper {
     public static void runSql(
             ConnectionFactory connectionFactory,
             String sql,
-            SqlStorage.QueryExecutor executor
+            QueryExecutor executor
     ) {
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -26,7 +25,7 @@ public class SqlHelper {
     public static <T> T runSqlAndGetResult(
             ConnectionFactory connectionFactory,
             String sql,
-            SqlStorage.QuerySelectExecutor<T> executor
+            QuerySelectExecutor<T> executor
     ) {
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -34,6 +33,16 @@ public class SqlHelper {
         } catch (SQLException e) {
             throw new StorageException(e);
         }
+    }
+
+    @FunctionalInterface
+    public interface QueryExecutor {
+        void execute(PreparedStatement ps) throws SQLException;
+    }
+
+    @FunctionalInterface
+    public interface QuerySelectExecutor<T> {
+        T execute(PreparedStatement ps) throws SQLException;
     }
 
 }

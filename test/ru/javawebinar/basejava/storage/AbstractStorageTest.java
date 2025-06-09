@@ -10,6 +10,7 @@ import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.io.File;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 import static ru.javawebinar.basejava.storage.AbstractStorage.RESUME_COMPARATOR;
@@ -17,11 +18,11 @@ import static ru.javawebinar.basejava.storage.AbstractStorage.RESUME_COMPARATOR;
 public abstract class AbstractStorageTest {
     protected static final File STORAGE_DIR = Config.get().getStorageDir();
 
-    private static final String UUID_1 = "uuid1";
-    private static final String UUID_2 = "uuid2";
-    private static final String UUID_3 = "uuid3";
-    private static final String UUID_4 = "uuid4";
-    private static final String DUMMY = "dummy";
+    private static final String UUID_1 = UUID.randomUUID().toString();
+    private static final String UUID_2 = UUID.randomUUID().toString();
+    private static final String UUID_3 = UUID.randomUUID().toString();
+    private static final String UUID_4 = UUID.randomUUID().toString();
+    private static final String DUMMY = UUID.randomUUID().toString();
 
     private static final Resume RESUME1 = ResumeTestData.createResume(UUID_1, "John Doe");
     private static final Resume RESUME2 = ResumeTestData.createResume(UUID_2, "Bob Martin");
