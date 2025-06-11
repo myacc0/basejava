@@ -1,7 +1,5 @@
 package ru.javawebinar.basejava.util;
 
-import org.postgresql.util.PSQLException;
-import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.sql.ConnectionFactory;
 
@@ -20,10 +18,7 @@ public class SqlHelper {
              PreparedStatement ps = conn.prepareStatement(sql)) {
             executor.execute(ps);
         } catch (SQLException e) {
-            if (e instanceof PSQLException && e.getSQLState().equals("23505")) {
-                throw new ExistStorageException(null);
-            }
-            throw new StorageException(e);
+            throw ExceptionUtil.convertException(e);
         }
     }
 
@@ -40,6 +35,22 @@ public class SqlHelper {
         }
     }
 
+    public static <T> T transactionalExecute(ConnectionFactory connectionFactory, SqlTransaction<T> executor) {
+        try (Connection conn = connectionFactory.getConnection()) {
+            try {
+                conn.setAutoCommit(false);
+                T res = executor.execute(conn);
+                conn.commit();
+                return res;
+            } catch (SQLException e) {
+                conn.rollback();
+                throw ExceptionUtil.convertException(e);
+            }
+        } catch (SQLException e) {
+            throw new StorageException(e);
+        }
+    }
+
     @FunctionalInterface
     public interface QueryExecutor {
         void execute(PreparedStatement ps) throws SQLException;
@@ -48,6 +59,11 @@ public class SqlHelper {
     @FunctionalInterface
     public interface QuerySelectExecutor<T> {
         T execute(PreparedStatement ps) throws SQLException;
+    }
+
+    @FunctionalInterface
+    public interface SqlTransaction<T> {
+        T execute(Connection conn) throws SQLException;
     }
 
 }
