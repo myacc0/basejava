@@ -2,6 +2,7 @@ package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.exception.StorageException;
+import ru.javawebinar.basejava.model.ContactType;
 import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.sql.ConnectionFactory;
 import ru.javawebinar.basejava.util.SqlHelper;
@@ -11,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class SqlStorage implements Storage {
     public final ConnectionFactory connectionFactory;
@@ -45,18 +47,37 @@ public class SqlStorage implements Storage {
             ps.setString(2, r.getFullName());
             ps.execute();
         });
+        for (Map.Entry<ContactType, String> e : r.getContacts().entrySet()) {
+            String contactSql = "INSERT INTO contact (resume_uuid, type, value) VALUES (?, ?, ?)";
+            SqlHelper.runSql(connectionFactory, contactSql, ps -> {
+                ps.setString(1, r.getUuid());
+                ps.setString(2, e.getKey().name());
+                ps.setString(3, e.getValue());
+                ps.execute();
+            });
+        }
     }
 
     @Override
     public Resume get(String uuid) {
-        String sql = "SELECT * FROM resume r WHERE r.uuid = ?";
+        String sql =
+                "   SELECT * FROM resume r " +
+                        "   LEFT JOIN contacts c " +
+                        "       ON c.resume_uuid = r.uuid " +
+                        "   WHERE r.uuid = ?";
         return SqlHelper.runSqlAndGetResult(connectionFactory, sql, ps -> {
             ps.setString(1, uuid);
             ResultSet rs = ps.executeQuery();
             if (!rs.next()) {
                 throw new NotExistStorageException(uuid);
             }
-            return new Resume(uuid, rs.getString("full_name"));
+            Resume r = new Resume(uuid, rs.getString("full_name"));
+            do {
+                String value = rs.getString("value");
+                ContactType type = ContactType.valueOf(rs.getString("type"));
+                r.addContact(type, value);
+            } while (rs.next());
+            return r;
         });
     }
 
