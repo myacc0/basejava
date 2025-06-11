@@ -17,12 +17,12 @@ public class DataStreamSerializer implements ResumeSerializer {
             dos.writeUTF(r.getUuid());
             dos.writeUTF(r.getFullName());
 
-            /*
             writeCollection(dos, r.getContacts().entrySet(), (e) -> {
                 dos.writeUTF(e.getKey().name());
                 dos.writeUTF(e.getValue());
             });
 
+            /*
             dos.writeUTF(((TextSection) r.getSections().get(SectionType.OBJECTIVE)).getContent());
             dos.writeUTF(((TextSection) r.getSections().get(SectionType.PERSONAL)).getContent());
 
@@ -47,11 +47,11 @@ public class DataStreamSerializer implements ResumeSerializer {
             String fullName = dis.readUTF();
             Resume r = new Resume(uuid, fullName);
 
-            /*
             Set<Map.Entry<ContactType, String>> contactsEntrySet = new HashSet<>();
             readCollection(dis, contactsEntrySet, d -> Map.entry(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
             contactsEntrySet.forEach(entry -> r.addContact(entry.getKey(), entry.getValue()));
 
+            /*
             r.addSection(SectionType.OBJECTIVE, new TextSection(dis.readUTF()));
             r.addSection(SectionType.PERSONAL, new TextSection(dis.readUTF()));
 

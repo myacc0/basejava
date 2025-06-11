@@ -20,7 +20,6 @@ public class ResumeTestData {
         resume.setContacts(new HashMap<>());
         resume.setSections(new HashMap<>());
 
-        /*
         resume.getContacts().put(ContactType.CELL_PHONE, "+7(921) 855-0482");
         resume.getContacts().put(ContactType.SKYPE, "skype:grigory.kislin");
         resume.getContacts().put(ContactType.EMAIL, "gkislin@yandex.ru");
@@ -28,6 +27,7 @@ public class ResumeTestData {
         resume.getContacts().put(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473");
         resume.getContacts().put(ContactType.HOMEPAGE, "https://gkislin.ru/");
 
+        /*
         resume.getSections()
                 .put(SectionType.OBJECTIVE, new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям"));
 
