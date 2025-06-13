@@ -11,7 +11,7 @@ import java.sql.*;
 import java.util.*;
 
 public class SqlStorage implements Storage {
-    public final ConnectionFactory connectionFactory;
+    private final ConnectionFactory connectionFactory;
 
     public SqlStorage(String dbUrl, String dbUser, String dbPassword) {
         this.connectionFactory = () -> DriverManager.getConnection(dbUrl, dbUser, dbPassword);
@@ -69,7 +69,7 @@ public class SqlStorage implements Storage {
             }
             Resume r = new Resume(uuid, rs.getString("full_name"));
             do {
-                setContacts(rs, r);
+                addContacts(rs, r);
             } while (rs.next());
             return r;
         });
@@ -103,7 +103,7 @@ public class SqlStorage implements Storage {
                     r = new Resume(uuid, rs.getString("full_name"));
                     resumesMap.put(uuid, r);
                 }
-                setContacts(rs, r);
+                addContacts(rs, r);
             }
             return resumesMap.values().stream().sorted(AbstractStorage.RESUME_COMPARATOR).toList();
         });
@@ -121,7 +121,7 @@ public class SqlStorage implements Storage {
         });
     }
 
-    private void setContacts(ResultSet rs, Resume r) throws SQLException {
+    private void addContacts(ResultSet rs, Resume r) throws SQLException {
         if (rs == null) return;
         String value = rs.getString("value");
         ContactType type = ContactType.valueOf(rs.getString("type"));
