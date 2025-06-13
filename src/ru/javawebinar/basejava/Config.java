@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.Properties;
 
 public class Config {
-    private static final File PROPS = new File("config/resumes.properties");
+    private static final String PROPS = "/resources/resumes.properties";
     private static final Config INSTANCE = new Config();
 
     private Properties props = new Properties();
@@ -18,14 +18,14 @@ public class Config {
     }
 
     public Config() {
-        try (InputStream is = new FileInputStream(PROPS)) {
+        try (InputStream is = Config.class.getResourceAsStream(PROPS)) {
             props.load(is);
             storageDir = new File(props.getProperty("storage.dir"));
             dbUrl = props.getProperty("db.url");
             dbUser = props.getProperty("db.user");
             dbPassword = props.getProperty("db.password");
         } catch (IOException e) {
-            throw new IllegalStateException("Invalid config file " + PROPS.getAbsolutePath());
+            throw new IllegalStateException("Invalid config file " + PROPS);
         }
     }
 
