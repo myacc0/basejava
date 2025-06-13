@@ -8,7 +8,9 @@ import ru.javawebinar.basejava.ResumeTestData;
 import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.ContactType;
+import ru.javawebinar.basejava.model.ListSection;
 import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.model.TextSection;
 
 import java.io.File;
 import java.util.UUID;
@@ -58,6 +60,21 @@ public abstract class AbstractStorageTest {
         resume.getContacts().clear();
         resume.getContacts().put(ContactType.CELL_PHONE, "+7(921) 855-0482");
         resume.getContacts().put(ContactType.SKYPE, "skype:grigory.kislin");
+
+        resume.getSections().forEach((type, section) -> {
+            switch (type) {
+                case OBJECTIVE, PERSONAL -> {
+                    String c = ((TextSection) section).getContent();
+                    ((TextSection) section).setContent(c + "123");
+                }
+                case ACHIEVEMENT, QUALIFICATIONS -> {
+                    ((ListSection) section).getContent().remove(1);
+                }
+                case EXPERIENCE, EDUCATION -> {
+                    // TODO: implement in next lessons
+                }
+            }
+        });
 
         storage.update(resume);
         Assert.assertEquals(resume, storage.get(resume.getUuid()));

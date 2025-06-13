@@ -22,13 +22,13 @@ public class DataStreamSerializer implements ResumeSerializer {
                 dos.writeUTF(e.getValue());
             });
 
-            /*
+
             dos.writeUTF(((TextSection) r.getSections().get(SectionType.OBJECTIVE)).getContent());
             dos.writeUTF(((TextSection) r.getSections().get(SectionType.PERSONAL)).getContent());
 
             writeCollection(dos, ((ListSection) r.getSections().get(SectionType.ACHIEVEMENT)).getContent(), dos::writeUTF);
             writeCollection(dos, ((ListSection) r.getSections().get(SectionType.QUALIFICATIONS)).getContent(), dos::writeUTF);
-
+            /*
             writeCollection(dos,
                     ((OrganizationSection) r.getSections().get(SectionType.EXPERIENCE)).getContent(),
                     o -> writeOrganization(dos, o));
@@ -51,7 +51,7 @@ public class DataStreamSerializer implements ResumeSerializer {
             readCollection(dis, contactsEntrySet, d -> Map.entry(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
             contactsEntrySet.forEach(entry -> r.addContact(entry.getKey(), entry.getValue()));
 
-            /*
+
             r.addSection(SectionType.OBJECTIVE, new TextSection(dis.readUTF()));
             r.addSection(SectionType.PERSONAL, new TextSection(dis.readUTF()));
 
@@ -60,7 +60,7 @@ public class DataStreamSerializer implements ResumeSerializer {
 
             r.addSection(SectionType.QUALIFICATIONS, new ListSection());
             readCollection(dis, ((ListSection) r.getSections().get(SectionType.QUALIFICATIONS)).getContent(), DataInput::readUTF);
-
+            /*
             r.addSection(SectionType.EXPERIENCE, new OrganizationSection());
             readCollection(dis, ((OrganizationSection) r.getSections().get(SectionType.EXPERIENCE)).getContent(), this::readOrganization);
 

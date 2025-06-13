@@ -11,6 +11,10 @@ public class ListSection extends Section {
         this.content = new ArrayList<>();
     }
 
+    public ListSection(List<String> content) {
+        this.content = content;
+    }
+
     private List<String> content;
 
     public List<String> getContent() {

@@ -27,7 +27,7 @@ public class ResumeTestData {
         resume.getContacts().put(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473");
         resume.getContacts().put(ContactType.HOMEPAGE, "https://gkislin.ru/");
 
-        /*
+
         resume.getSections()
                 .put(SectionType.OBJECTIVE, new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям"));
 
@@ -62,7 +62,7 @@ public class ResumeTestData {
         qualifications.getContent().add("Отличное знание и опыт применения концепций ООП, SOA, шаблонов проектрирования, архитектурных шаблонов, UML, функционального программирования");
         qualifications.getContent().add("Родной русский, английский \"upper intermediate\"");
         resume.getSections().put(SectionType.QUALIFICATIONS, qualifications);
-
+        /*
         OrganizationSection jobExperience = new OrganizationSection();
         fillJobExperiences(jobExperience);
         resume.getSections().put(SectionType.EXPERIENCE, jobExperience);
