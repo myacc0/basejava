@@ -77,8 +77,22 @@ public class SqlStorage implements Storage {
                     }
                     return new Resume(uuid, rs.getString("full_name"));
                 });
-        addContacts(resume);
-        addSections(resume);
+
+        SqlHelper.runSql(connectionFactory, "SELECT * FROM contact c WHERE c.resume_uuid = ?", ps -> {
+            ps.setString(1, uuid);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                addContacts(rs, resume);
+            }
+        });
+
+        SqlHelper.runSql(connectionFactory, "SELECT * FROM section s WHERE s.resume_uuid = ?", ps -> {
+            ps.setString(1, uuid);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                addSections(rs, resume);
+            }
+        });
         return resume;
     }
 
@@ -96,18 +110,29 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        List<Resume> resumes = new ArrayList<>();
-        SqlHelper.runSql(connectionFactory, "SELECT * FROM resume r ORDER BY r.full_name, r.uuid", ps -> {
+        Map<String, Resume> resumes = new HashMap<>();
+        SqlHelper.runSql(connectionFactory, "SELECT * FROM resume", ps -> {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                resumes.add(new Resume(rs.getString("uuid"), rs.getString("full_name")));
+                String uuid = rs.getString("uuid");
+                resumes.put(uuid, new Resume(uuid, rs.getString("full_name")));
             }
         });
-        resumes.forEach(r -> {
-            addContacts(r);
-            addSections(r);
+
+        SqlHelper.runSql(connectionFactory, "SELECT * FROM contact", ps -> {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                addContacts(rs, resumes.get(rs.getString("resume_uuid")));
+            }
         });
-        return resumes;
+
+        SqlHelper.runSql(connectionFactory, "SELECT * FROM section", ps -> {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                addSections(rs, resumes.get(rs.getString("resume_uuid")));
+            }
+        });
+        return resumes.values().stream().sorted(AbstractStorage.RESUME_COMPARATOR).toList();
     }
 
     @Override
@@ -122,16 +147,11 @@ public class SqlStorage implements Storage {
         });
     }
 
-    private void addContacts(Resume r) {
-        SqlHelper.runSql(connectionFactory, "SELECT * FROM contact c WHERE c.resume_uuid = ?", ps -> {
-            ps.setString(1, r.getUuid());
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                String value = rs.getString("value");
-                ContactType type = ContactType.valueOf(rs.getString("type"));
-                r.addContact(type, value);
-            }
-        });
+    private void addContacts(ResultSet rs, Resume r) throws SQLException {
+        if (rs == null || r == null) return;
+        String value = rs.getString("value");
+        ContactType type = ContactType.valueOf(rs.getString("type"));
+        r.addContact(type, value);
     }
 
     private void insertContacts(Connection conn, Resume r) throws SQLException {
@@ -146,29 +166,24 @@ public class SqlStorage implements Storage {
         }
     }
 
-    private void addSections(Resume r) {
-        SqlHelper.runSql(connectionFactory, "SELECT * FROM section s WHERE s.resume_uuid = ?", ps -> {
-            ps.setString(1, r.getUuid());
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                String value = rs.getString("value");
-                SectionType type = SectionType.valueOf(rs.getString("type"));
-                switch (type) {
-                    case OBJECTIVE, PERSONAL -> {
-                        r.addSection(type, new TextSection(value));
-                    }
-                    case ACHIEVEMENT, QUALIFICATIONS -> {
-                        List<String> content = (value != null)
-                                ? Arrays.asList(value.split("\n"))
-                                : Collections.emptyList();
-                        r.addSection(type, new ListSection(content));
-                    }
-                    case EXPERIENCE, EDUCATION -> {
-                        // TODO: implement in next lessons
-                    }
-                }
+    private void addSections(ResultSet rs, Resume r) throws SQLException {
+        if (rs == null || r == null) return;
+        String value = rs.getString("value");
+        SectionType type = SectionType.valueOf(rs.getString("type"));
+        switch (type) {
+            case OBJECTIVE, PERSONAL -> {
+                r.addSection(type, new TextSection(value));
             }
-        });
+            case ACHIEVEMENT, QUALIFICATIONS -> {
+                List<String> content = (value != null)
+                        ? Arrays.asList(value.split("\n"))
+                        : Collections.emptyList();
+                r.addSection(type, new ListSection(content));
+            }
+            case EXPERIENCE, EDUCATION -> {
+                // TODO: implement in next lessons
+            }
+        }
     }
 
     private void insertSections(Connection conn, Resume r) throws SQLException {
