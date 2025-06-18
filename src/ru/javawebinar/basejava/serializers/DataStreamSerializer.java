@@ -28,7 +28,7 @@ public class DataStreamSerializer implements ResumeSerializer {
 
             writeCollection(dos, ((ListSection) r.getSections().get(SectionType.ACHIEVEMENT)).getContent(), dos::writeUTF);
             writeCollection(dos, ((ListSection) r.getSections().get(SectionType.QUALIFICATIONS)).getContent(), dos::writeUTF);
-            /*
+
             writeCollection(dos,
                     ((OrganizationSection) r.getSections().get(SectionType.EXPERIENCE)).getContent(),
                     o -> writeOrganization(dos, o));
@@ -36,7 +36,6 @@ public class DataStreamSerializer implements ResumeSerializer {
             writeCollection(dos,
                     ((OrganizationSection) r.getSections().get(SectionType.EDUCATION)).getContent(),
                     o -> writeOrganization(dos, o));
-            */
         }
     }
 
@@ -60,13 +59,12 @@ public class DataStreamSerializer implements ResumeSerializer {
 
             r.addSection(SectionType.QUALIFICATIONS, new ListSection());
             readCollection(dis, ((ListSection) r.getSections().get(SectionType.QUALIFICATIONS)).getContent(), DataInput::readUTF);
-            /*
+
             r.addSection(SectionType.EXPERIENCE, new OrganizationSection());
             readCollection(dis, ((OrganizationSection) r.getSections().get(SectionType.EXPERIENCE)).getContent(), this::readOrganization);
 
             r.addSection(SectionType.EDUCATION, new OrganizationSection());
             readCollection(dis, ((OrganizationSection) r.getSections().get(SectionType.EDUCATION)).getContent(), this::readOrganization);
-             */
             return r;
         }
     }

@@ -13,6 +13,10 @@ public class DateUtil {
         return DateTimeFormatter.ISO_DATE.format(ld);
     }
 
+    public static String format(LocalDate ld, String format) {
+        return DateTimeFormatter.ofPattern(format).format(ld);
+    }
+
     public static LocalDate parse(String strDate) {
         return LocalDate.parse(strDate, DateTimeFormatter.ISO_DATE);
     }

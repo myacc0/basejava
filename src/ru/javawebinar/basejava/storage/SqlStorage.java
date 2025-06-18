@@ -4,6 +4,7 @@ import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.*;
 import ru.javawebinar.basejava.sql.ConnectionFactory;
+import ru.javawebinar.basejava.util.JsonParser;
 import ru.javawebinar.basejava.util.SqlHelper;
 
 import java.sql.*;
@@ -181,7 +182,7 @@ public class SqlStorage implements Storage {
                 r.addSection(type, new ListSection(content));
             }
             case EXPERIENCE, EDUCATION -> {
-                // TODO: implement in next lessons
+                r.addSection(type, JsonParser.parseJson(value, OrganizationSection.class));
             }
         }
     }
@@ -200,8 +201,7 @@ public class SqlStorage implements Storage {
                         ps.setString(3, String.join("\n", ((ListSection) e.getValue()).getContent()));
                     }
                     case EXPERIENCE, EDUCATION -> {
-                        // TODO: implement in next lessons
-                        ps.setString(3, null);
+                        ps.setString(3, JsonParser.toJson(e.getValue()));
                     }
                 }
                 ps.addBatch();

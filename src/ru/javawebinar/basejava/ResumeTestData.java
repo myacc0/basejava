@@ -62,7 +62,7 @@ public class ResumeTestData {
         qualifications.getContent().add("Отличное знание и опыт применения концепций ООП, SOA, шаблонов проектрирования, архитектурных шаблонов, UML, функционального программирования");
         qualifications.getContent().add("Родной русский, английский \"upper intermediate\"");
         resume.getSections().put(SectionType.QUALIFICATIONS, qualifications);
-        /*
+
         OrganizationSection jobExperience = new OrganizationSection();
         fillJobExperiences(jobExperience);
         resume.getSections().put(SectionType.EXPERIENCE, jobExperience);
@@ -70,7 +70,6 @@ public class ResumeTestData {
         OrganizationSection education = new OrganizationSection();
         fillEducationSpecialities(education);
         resume.getSections().put(SectionType.EDUCATION, education);
-        */
         return resume;
     }
 

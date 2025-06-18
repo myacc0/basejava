@@ -1,3 +1,7 @@
+* {
+    box-sizing: border-box;
+}
+
 header {
     background: none repeat scroll 0 0 #A6C9E2;
     color: #2E6E9E;
@@ -73,4 +77,49 @@ a[href^="https://www.linkedin.com"] {
 a[href*="github."] {
     padding-left: 20px !important;
     background: url(../img/gh.png) no-repeat center left;
+}
+
+h2 a {
+    margin-left: 10px;
+}
+
+.contacts {
+    list-style: none;
+    line-height: 1.2;
+    padding: 0;
+    margin: 10px 0 20px 0;
+}
+.contacts li {
+    margin: 7px 0;
+}
+
+.resume-sections {
+    margin: 5px 0;
+}
+.resume-s {
+    margin: 30px 0;
+}
+.organization-s ul {
+    list-style: none;
+    padding: 0;
+}
+.organization-s ul li {
+    margin: 25px 0;
+}
+.organization-s ul li h3 {
+    padding-left: 33%;
+}
+.organization-s ul li .row {
+    display: flex;
+    flex: 1 0 auto;
+    flex-direction: row;
+}
+.organization-s ul li .row p {
+    margin: 5px 0;
+}
+.organization-s ul li .row .col-1 {
+    width: 33%;
+}
+.organization-s ul li .row .col-3 {
+    width: 67%;
 }
