@@ -1,7 +1,6 @@
 package ru.javawebinar.basejava.web;
 
 import ru.javawebinar.basejava.Config;
-import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.storage.SqlStorage;
 import ru.javawebinar.basejava.storage.Storage;
 
@@ -24,35 +23,7 @@ public class ResumeServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setCharacterEncoding("UTF-8");
-        resp.setCharacterEncoding("UTF-8");
-        resp.setContentType("text/html; charset=UTF-8");
-
-        StringBuilder sb = new StringBuilder("<!DOCTYPE html>");
-        sb.append("<html lang=\"en\">")
-                .append("<head>")
-                .append("<meta charset=\"UTF-8\">")
-                .append("<link rel=\"stylesheet\" href=\"css/styles.css\">")
-                .append("<title>Резюме</title>")
-                .append("</head>")
-                .append("<body>")
-                .append("<table>")
-                .append("<tr>")
-                .append("<th>UUID</th>")
-                .append("<th>Full name</th>")
-                .append("</tr>")
-                .append("<tbody>");
-
-        for (Resume r : storage.getAllSorted()) {
-            sb.append("<tr>")
-                    .append("<td>").append(r.getUuid()).append("</td>")
-                    .append("<td>").append(r.getFullName()).append("</td>")
-                    .append("</tr>");
-        }
-        sb.append("</table>")
-                .append("</body>")
-                .append("</html>");
-
-        resp.getWriter().write(sb.toString());
+        req.setAttribute("resumes", storage.getAllSorted());
+        req.getRequestDispatcher("/WEB-INF/jsp/list.jsp").forward(req, resp);
     }
 }

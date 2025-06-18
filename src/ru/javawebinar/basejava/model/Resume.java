@@ -73,6 +73,10 @@ public class Resume implements Serializable {
         sections.put(type, section);
     }
 
+    public String getContact(ContactType contactType) {
+        return contacts.get(contactType);
+    }
+
     @Override
     public String toString() {
         return uuid + '(' + fullName + ')';
