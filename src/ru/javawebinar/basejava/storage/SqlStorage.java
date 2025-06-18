@@ -82,7 +82,7 @@ public class SqlStorage implements Storage {
             ps.setString(1, uuid);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                addContacts(rs, resume);
+                addContact(rs, resume);
             }
         });
 
@@ -90,7 +90,7 @@ public class SqlStorage implements Storage {
             ps.setString(1, uuid);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                addSections(rs, resume);
+                addSection(rs, resume);
             }
         });
         return resume;
@@ -122,14 +122,14 @@ public class SqlStorage implements Storage {
         SqlHelper.runSql(connectionFactory, "SELECT * FROM contact", ps -> {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                addContacts(rs, resumes.get(rs.getString("resume_uuid")));
+                addContact(rs, resumes.get(rs.getString("resume_uuid")));
             }
         });
 
         SqlHelper.runSql(connectionFactory, "SELECT * FROM section", ps -> {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                addSections(rs, resumes.get(rs.getString("resume_uuid")));
+                addSection(rs, resumes.get(rs.getString("resume_uuid")));
             }
         });
         return resumes.values().stream().sorted(AbstractStorage.RESUME_COMPARATOR).toList();
@@ -147,7 +147,7 @@ public class SqlStorage implements Storage {
         });
     }
 
-    private void addContacts(ResultSet rs, Resume r) throws SQLException {
+    private void addContact(ResultSet rs, Resume r) throws SQLException {
         if (rs == null || r == null) return;
         String value = rs.getString("value");
         ContactType type = ContactType.valueOf(rs.getString("type"));
@@ -166,7 +166,7 @@ public class SqlStorage implements Storage {
         }
     }
 
-    private void addSections(ResultSet rs, Resume r) throws SQLException {
+    private void addSection(ResultSet rs, Resume r) throws SQLException {
         if (rs == null || r == null) return;
         String value = rs.getString("value");
         SectionType type = SectionType.valueOf(rs.getString("type"));
