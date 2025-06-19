@@ -6,23 +6,21 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" href="css/style.css">
-    <jsp:useBean id="resume" type="ru.javawebinar.basejava.model.Resume" scope="request"/>
-    <title>Резюме ${resume.fullName}</title>
+    <title>Создание нового резюме</title>
 </head>
 <body>
 <jsp:include page="fragments/header.jsp"/>
 <section>
     <form method="post" action="resume" enctype="application/x-www-form-urlencoded">
-        <input type="hidden" name="uuid" value="${resume.uuid}">
         <dl>
             <dt>Имя:</dt>
-            <dd><input type="text" name="fullName" size=50 value="${resume.fullName}" required></dd>
+            <dd><input type="text" name="fullName" size=50 required></dd>
         </dl>
         <h3>Контакты:</h3>
         <c:forEach var="type" items="<%=ContactType.values()%>">
             <dl>
                 <dt>${type.title}</dt>
-                <dd><input type="text" name="${type.name()}" size=30 value="${resume.getContact(type)}"></dd>
+                <dd><input type="text" name="${type.name()}" size=30></dd>
             </dl>
         </c:forEach>
 
@@ -31,36 +29,34 @@
         <dl class="mb-15">
             <dt>${SectionType.OBJECTIVE.title}</dt>
             <dd>
-                <c:set var="objective" value="${resume.sections[SectionType.OBJECTIVE]}" />
-                <textarea name="${SectionType.OBJECTIVE.name()}" rows="4" cols="50">${objective != null ? objective.content : ''}</textarea>
+                <textarea name="${SectionType.OBJECTIVE.name()}" rows="4" cols="50"></textarea>
             </dd>
         </dl>
 
         <dl class="mb-15">
             <dt>${SectionType.PERSONAL.title}</dt>
             <dd>
-                <c:set var="personal" value="${resume.sections[SectionType.PERSONAL]}" />
-                <textarea name="${SectionType.PERSONAL.name()}" rows="4" cols="50">${personal != null ? personal.content : ''}</textarea>
+                <textarea name="${SectionType.PERSONAL.name()}" rows="4" cols="50"></textarea>
             </dd>
         </dl>
 
         <dl class="mb-15">
             <dt>${SectionType.ACHIEVEMENT.title}</dt>
             <dd>
-                <textarea name="${SectionType.ACHIEVEMENT.name()}" rows="20" cols="50">${achievement}</textarea>
+                <textarea name="${SectionType.ACHIEVEMENT.name()}" rows="20" cols="50"></textarea>
             </dd>
         </dl>
 
         <dl class="mb-15">
             <dt>${SectionType.QUALIFICATIONS.title}</dt>
             <dd>
-                <textarea name="${SectionType.QUALIFICATIONS.name()}" rows="20" cols="50">${qualifications}</textarea>
+                <textarea name="${SectionType.QUALIFICATIONS.name()}" rows="20" cols="50"></textarea>
             </dd>
         </dl>
 
         <hr>
         <button type="submit">Сохранить</button>
-        <button onclick="window.history.back()">Отменить</button>
+        <button type="button" onclick="window.history.back()">Отменить</button>
     </form>
 </section>
 <jsp:include page="fragments/footer.jsp"/>

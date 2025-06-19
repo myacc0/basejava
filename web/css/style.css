@@ -123,3 +123,19 @@ h2 a {
 .organization-s ul li .row .col-3 {
     width: 67%;
 }
+
+
+.mb-10 {
+    margin-bottom: 10px;
+}
+.mb-15 {
+    margin-bottom: 10px;
+}
+
+.add-button {
+    display: inline-flex;
+    flex-direction: row;
+}
+.add-button span {
+    padding-left: 10px;
+}

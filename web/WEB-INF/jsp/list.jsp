@@ -10,6 +10,12 @@
 <body>
 <jsp:include page="fragments/header.jsp" />
 <section>
+    <div class="mb-15">
+        <a class="add-button" href="resume?action=add">
+            Создать новое резюме
+            <span><img src="img/add.png"></span>
+        </a>
+    </div>
     <table border="1" cellpadding="8" cellspacing="0">
         <tr>
             <th>Имя</th>
